@@ -630,12 +630,12 @@ static esp_err_t s_i2c_transaction_start(i2c_master_dev_handle_t i2c_dev, int xf
     i2c_master->read_len_static = 0;
     i2c_master->read_buf_pos = 0;
 
+    // Set the timeout value
+    i2c_hal_master_set_scl_timeout_val(hal, i2c_dev->scl_wait_us, i2c_master->base->clk_src_freq_hz);
+    
     I2C_CLOCK_SRC_ATOMIC() {
         i2c_hal_set_bus_timing(hal, i2c_dev->scl_speed_hz, i2c_master->base->clk_src, i2c_master->base->clk_src_freq_hz);
     }
-
-    // Set the timeout value
-    i2c_hal_master_set_scl_timeout_val(hal, i2c_dev->scl_wait_us, i2c_master->base->clk_src_freq_hz);
 
     i2c_ll_master_set_fractional_divider(hal->dev, 0, 0);
     i2c_ll_update(hal->dev);
